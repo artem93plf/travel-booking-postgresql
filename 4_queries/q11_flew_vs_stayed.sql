@@ -1,0 +1,16 @@
+-- q11. Летал и жил
+--
+-- Для пользователя с email anna.volkova@tmail.test выведите города, куда он
+-- летал (город прилёта билетов его заказов) и где при этом жил
+-- (flew_and_stayed), и города, куда летал, но не жил (flew_only). Заказы
+-- учитываются в любом статусе заказа.
+--
+-- Параметры:
+--   user_email = anna.volkova@tmail.test
+--   categories = flew_and_stayed, flew_only
+--
+-- Вывод (колонки строго в этом порядке): city_name, category
+-- Сортировка: category, city_name
+-- Баллы: 10
+--
+-- Ваш SQL код здесь

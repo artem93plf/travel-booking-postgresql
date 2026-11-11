@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: smoke
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  smoke:
+    build: tools
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/work:ro
+    command: python tools/smoke.py --dsn postgresql://postgres:smoke@db:5432/postgres --root /work

@@ -1,0 +1,616 @@
+{
+  "today": "2026-11-01",
+  "period": [
+    "2026-01-01",
+    "2026-10-31"
+  ],
+  "run_order": [
+    "0_raw/raw.sql",
+    "2_ddl/ddl.sql",
+    "3_data/migration.sql",
+    "2_ddl/negative_tests.sql",
+    "4_queries/q01_hotel_stays_top.sql",
+    "4_queries/q02_silent_bad_reviews.sql",
+    "4_queries/q03_moscow_october_flights.sql",
+    "4_queries/q04_airline_tickets.sql",
+    "4_queries/q05_popular_directions.sql",
+    "4_queries/q06_passenger_routes.sql",
+    "4_queries/q07_idle_hotels.sql",
+    "4_queries/q08_airline_class_matrix.sql",
+    "4_queries/q09_city_summary.sql",
+    "4_queries/q10_above_flight_avg.sql",
+    "4_queries/q11_flew_vs_stayed.sql",
+    "4_queries/q12_user_feed.sql",
+    "4_queries/q13_first_orders.sql",
+    "4_queries/q14_best_hotel_by_city.sql",
+    "3_data/d01_update.sql",
+    "3_data/d02_delete_cascade.sql",
+    "3_data/d03_delete_subquery.sql",
+    "5_evolution/alter.sql",
+    "5_evolution/e01_promo_usage.sql",
+    "5_evolution/e02_expired_promo_orders.sql",
+    "6_own/own01.sql",
+    "6_own/own02.sql"
+  ],
+  "run_order_extra": [
+    "0_raw/raw.sql",
+    "2_ddl/ddl.sql",
+    "3_data/migration.sql",
+    "3_data/extra.sql",
+    "4_queries/q01_hotel_stays_top.sql",
+    "4_queries/q02_silent_bad_reviews.sql",
+    "4_queries/q03_moscow_october_flights.sql",
+    "4_queries/q04_airline_tickets.sql",
+    "4_queries/q05_popular_directions.sql",
+    "4_queries/q06_passenger_routes.sql",
+    "4_queries/q07_idle_hotels.sql",
+    "4_queries/q08_airline_class_matrix.sql",
+    "4_queries/q09_city_summary.sql",
+    "4_queries/q10_above_flight_avg.sql",
+    "4_queries/q11_flew_vs_stayed.sql",
+    "4_queries/q12_user_feed.sql",
+    "4_queries/q13_first_orders.sql",
+    "4_queries/q14_best_hotel_by_city.sql",
+    "6_own/own01.sql",
+    "6_own/own02.sql"
+  ],
+  "queries": {
+    "q01": {
+      "file": "4_queries/q01_hotel_stays_top.sql",
+      "title": "Самые дорогие проживания",
+      "task": "Выведите 10 самых дорогих проживаний в отелях: номер заказа, отель и город одной строкой в формате «Отель, Город», дату заезда, количество ночей (выезд минус заезд) и стоимость проживания. nights — целое число ночей (дата выезда минус дата заезда); total_cost = nights × цена за ночь отеля.",
+      "columns": [
+        "order_number",
+        "hotel_city",
+        "check_in",
+        "nights",
+        "total_cost"
+      ],
+      "order_by": [
+        "total_cost DESC",
+        "order_number",
+        "check_in"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "limit": 10
+      },
+      "points": 5
+    },
+    "q02": {
+      "file": "4_queries/q02_silent_bad_reviews.sql",
+      "title": "Молчаливые низкие оценки",
+      "task": "Выведите отзывы без текста с оценкой не выше 2, оставленные пользователями с email вида «…@tmail.test»: email пользователя, название отеля, оценка и дата отзыва. Текст отзыва отсутствует (NULL).",
+      "columns": [
+        "user_email",
+        "hotel_name",
+        "rating",
+        "reviewed_at"
+      ],
+      "order_by": [
+        "reviewed_at",
+        "user_email"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "email_like": "%@tmail.test",
+        "max_rating": 2
+      },
+      "points": 5
+    },
+    "q03": {
+      "file": "4_queries/q03_moscow_october_flights.sql",
+      "title": "Московские рейсы октября",
+      "task": "Выведите рейсы, вылетающие из московских аэропортов (SVO, DME, VKO) за период с 1 по 31 октября 2026 года включительно с базовой ценой от 5000 до 15000 включительно: номер рейса, время вылета, IATA вылета и прилёта, базовая цена.",
+      "columns": [
+        "flight_no",
+        "departure_at",
+        "from_iata",
+        "to_iata",
+        "base_price"
+      ],
+      "order_by": [
+        "departure_at",
+        "flight_no"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "iata": [
+          "SVO",
+          "DME",
+          "VKO"
+        ],
+        "date_from": "2026-10-01",
+        "date_to": "2026-10-31",
+        "price_min": 5000,
+        "price_max": 15000
+      },
+      "points": 5
+    },
+    "q04": {
+      "file": "4_queries/q04_airline_tickets.sql",
+      "title": "Билеты по авиакомпаниям",
+      "task": "Для каждой авиакомпании выведите название, число проданных билетов и среднюю цену билета (округлите до 2 знаков). Авиакомпании без билетов тоже должны попасть в результат. Учитываются все билеты независимо от статуса заказа. У авиакомпании без билетов tickets_count = 0, avg_ticket_price = NULL.",
+      "columns": [
+        "airline_name",
+        "tickets_count",
+        "avg_ticket_price"
+      ],
+      "order_by": [
+        "airline_name"
+      ],
+      "null_as_zero": [],
+      "params": {},
+      "points": 10
+    },
+    "q05": {
+      "file": "4_queries/q05_popular_directions.sql",
+      "title": "Популярные направления",
+      "task": "Выведите направления (город вылета, город прилёта), на которые в октябре 2026 года (по дате вылета) куплено строго больше 3 билетов только в заказах в статусе paid, с числом пассажиров. Сначала самые популярные. passengers_count — число билетов (каждый билет — один пассажир на одном рейсе); направление — пара «город вылета → город прилёта» (аэропорты одного города объединяются).",
+      "columns": [
+        "from_city",
+        "to_city",
+        "passengers_count"
+      ],
+      "order_by": [
+        "passengers_count DESC",
+        "from_city",
+        "to_city"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "departure_month": "2026-10",
+        "order_status": "paid",
+        "min_passengers_exclusive": 3
+      },
+      "points": 10
+    },
+    "q06": {
+      "file": "4_queries/q06_passenger_routes.sql",
+      "title": "Маршруты пассажира",
+      "task": "Выведите все билеты пассажира с паспортом 4510 123456 в порядке вылета: время вылета, номер рейса, IATA и город вылета, IATA и город прилёта, класс билета. Паспорт указан в том формате, в котором он хранится в исходных данных raw.",
+      "columns": [
+        "departure_at",
+        "flight_no",
+        "from_iata",
+        "from_city",
+        "to_iata",
+        "to_city",
+        "ticket_class"
+      ],
+      "order_by": [
+        "departure_at"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "passport": "4510 123456"
+      },
+      "points": 10
+    },
+    "q07": {
+      "file": "4_queries/q07_idle_hotels.sql",
+      "title": "Отели без заездов",
+      "task": "Выведите отели, в которых не было ни одного заезда с 1 по 30 сентября 2026 года включительно: название отеля и город. Отели вообще без проживаний тоже входят.",
+      "columns": [
+        "hotel_name",
+        "city_name"
+      ],
+      "order_by": [
+        "hotel_name"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "check_in_from": "2026-09-01",
+        "check_in_to": "2026-09-30"
+      },
+      "points": 10
+    },
+    "q08": {
+      "file": "4_queries/q08_airline_class_matrix.sql",
+      "title": "Матрица авиакомпания × класс",
+      "task": "Постройте матрицу «авиакомпания × класс билета» (economy, comfort, business): для каждой пары выведите число проданных билетов, включая нули. Учитываются все билеты независимо от статуса заказа.",
+      "columns": [
+        "airline_name",
+        "ticket_class",
+        "tickets_count"
+      ],
+      "order_by": [
+        "airline_name",
+        "ticket_class"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "classes": [
+          "economy",
+          "comfort",
+          "business"
+        ]
+      },
+      "points": 10
+    },
+    "q09": {
+      "file": "4_queries/q09_city_summary.sql",
+      "title": "Сводка по городам",
+      "task": "Для каждого города, где был хотя бы один вылет или хотя бы одно проживание, выведите число вылетов из него и число проживаний в нём (0, если нет). departures_count — число рейсов по расписанию (в исходных данных — raw_flights), вылетающих из аэропортов города, включая рейсы без проданных билетов; stays_count — число проживаний в отелях города в любом статусе заказа.",
+      "columns": [
+        "city_name",
+        "departures_count",
+        "stays_count"
+      ],
+      "order_by": [
+        "city_name"
+      ],
+      "null_as_zero": [
+        "departures_count",
+        "stays_count"
+      ],
+      "params": {},
+      "points": 10
+    },
+    "q10": {
+      "file": "4_queries/q10_above_flight_avg.sql",
+      "title": "Билеты дороже средней по рейсу",
+      "task": "Выведите билеты, цена которых выше средней цены билетов своего рейса: номер рейса, время вылета, паспорт пассажира, цена билета и средняя цена билетов рейса (округлите до 2 знаков). Сравнение выполняйте с неокруглённой средней ценой рейса; в колонке flight_avg_price выводится средняя, округлённая до 2 знаков. Рейс — конкретный вылет (номер рейса + дата и время вылета).",
+      "columns": [
+        "flight_no",
+        "departure_at",
+        "passenger_passport",
+        "ticket_price",
+        "flight_avg_price"
+      ],
+      "order_by": [
+        "flight_no",
+        "departure_at",
+        "passenger_passport",
+        "ticket_price"
+      ],
+      "null_as_zero": [],
+      "params": {},
+      "points": 10
+    },
+    "q11": {
+      "file": "4_queries/q11_flew_vs_stayed.sql",
+      "title": "Летал и жил",
+      "task": "Для пользователя с email anna.volkova@tmail.test выведите города, куда он летал (город прилёта билетов его заказов) и где при этом жил (flew_and_stayed), и города, куда летал, но не жил (flew_only). Заказы учитываются в любом статусе заказа.",
+      "columns": [
+        "city_name",
+        "category"
+      ],
+      "order_by": [
+        "category",
+        "city_name"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "user_email": "anna.volkova@tmail.test",
+        "categories": [
+          "flew_and_stayed",
+          "flew_only"
+        ]
+      },
+      "points": 10
+    },
+    "q12": {
+      "file": "4_queries/q12_user_feed.sql",
+      "title": "Лента активностей",
+      "task": "Для пользователя с email ivan.sokolov@mail.test выведите единую ленту активностей по дате: перелёты (дата вылета, номер рейса, цена билета) и проживания (дата заезда, название отеля, стоимость). В колонке kind укажите flight или hotel. Каждый билет и каждое проживание — отдельная строка ленты. activity_at — дата и время; для проживания — полночь дня заезда.",
+      "columns": [
+        "activity_at",
+        "kind",
+        "title",
+        "amount"
+      ],
+      "order_by": [
+        "activity_at",
+        "kind",
+        "title",
+        "amount"
+      ],
+      "null_as_zero": [],
+      "params": {
+        "user_email": "ivan.sokolov@mail.test",
+        "kinds": [
+          "flight",
+          "hotel"
+        ]
+      },
+      "points": 10
+    },
+    "q13": {
+      "file": "4_queries/q13_first_orders.sql",
+      "title": "Первые заказы",
+      "task": "Для каждого пользователя, сделавшего заказы, выведите его самый первый заказ: email, номер заказа, дата создания. При равенстве created_at берите заказ с меньшим номером.",
+      "columns": [
+        "user_email",
+        "order_number",
+        "created_at"
+      ],
+      "order_by": [
+        "user_email"
+      ],
+      "null_as_zero": [],
+      "params": {},
+      "points": 10
+    },
+    "q14": {
+      "file": "4_queries/q14_best_hotel_by_city.sql",
+      "title": "Лучший отель города",
+      "task": "Для каждого города выведите отель с наивысшей средней оценкой отзывов (округлите среднюю до 2 знаков). Если лучших несколько с одинаковой оценкой, выведите все. Сравнивайте точные средние, округляйте только при выводе; отели без отзывов и города без отзывов не выводятся.",
+      "columns": [
+        "city_name",
+        "hotel_name",
+        "avg_rating"
+      ],
+      "order_by": [
+        "city_name",
+        "hotel_name"
+      ],
+      "null_as_zero": [],
+      "params": {},
+      "points": 15
+    },
+    "e01": {
+      "file": "5_evolution/e01_promo_usage.sql",
+      "title": "Использование промокодов",
+      "task": "Для каждого промокода выведите код, скидку в процентах, число заказов с этим промокодом (независимо от оплаты и статуса заказа) и суммарную скидку: ROUND(сумма по оплаченным заказам (сумма оплаты × процент / 100), 2); оплаченный заказ — заказ со статусом paid, у него есть оплата. У неиспользованного промокода число применений равно 0, суммарная скидка — 0; если промокод применён только к неоплаченным заказам, суммарная скидка — 0.",
+      "columns": [
+        "promo_code",
+        "discount_percent",
+        "uses_count",
+        "total_discount"
+      ],
+      "order_by": [
+        "promo_code"
+      ],
+      "null_as_zero": [
+        "total_discount"
+      ],
+      "params": {},
+      "points": 0
+    },
+    "e02": {
+      "file": "5_evolution/e02_expired_promo_orders.sql",
+      "title": "Просроченные промокоды",
+      "task": "Выведите заказы, в которых промокод применён после окончания срока его действия: номер заказа, код, дата и время создания заказа и дата окончания действия. valid_until — дата (DATE); промокод действует до конца дня valid_until включительно, поэтому заказ, созданный в день valid_until в любое время, не просрочен, а созданный на следующий день или позже — просрочен.",
+      "columns": [
+        "order_number",
+        "promo_code",
+        "created_at",
+        "valid_until"
+      ],
+      "order_by": [
+        "order_number"
+      ],
+      "null_as_zero": [],
+      "params": {},
+      "points": 0
+    }
+  },
+  "rules": [
+    {
+      "code": "R01",
+      "text": "Два пассажира с одним номером паспорта",
+      "sqlstate": "23505"
+    },
+    {
+      "code": "R02",
+      "text": "Два пользователя с одним email",
+      "sqlstate": "23505"
+    },
+    {
+      "code": "R03",
+      "text": "Билет на несуществующий рейс",
+      "sqlstate": "23503"
+    },
+    {
+      "code": "R04",
+      "text": "Прилёт не позже вылета",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R05",
+      "text": "Выезд из отеля не позже заезда",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R06",
+      "text": "Звёзды отеля вне 1..5",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R07",
+      "text": "Оценка отзыва вне 1..5",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R08",
+      "text": "Отрицательная или нулевая цена билета",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R09",
+      "text": "Вторая оплата одного и того же заказа",
+      "sqlstate": "23505"
+    },
+    {
+      "code": "R10",
+      "text": "Заказ без пользователя",
+      "sqlstate": "23502"
+    },
+    {
+      "code": "R11",
+      "text": "Статус заказа не из списка (created, paid, cancelled)",
+      "sqlstate": "23514"
+    },
+    {
+      "code": "R12",
+      "text": "Удаление рейса, на который проданы билеты",
+      "sqlstate": "23503"
+    }
+  ],
+  "own_rules": {
+    "required": [
+      "S1",
+      "S2"
+    ],
+    "optional": [
+      "S3"
+    ]
+  },
+  "dml": {
+    "d01": {
+      "file": "3_data/d01_update.sql",
+      "title": "Отмена неоплаченных заказов",
+      "task": "Переведите в статус cancelled все заказы в статусе created без оплаты, созданные раньше 2026-10-01. Оплаченные и более новые заказы затрагивать нельзя."
+    },
+    "d02": {
+      "file": "3_data/d02_delete_cascade.sql",
+      "title": "Удаление отменённых заказов",
+      "task": "Удалите отменённые заказы (cancelled), созданные раньше 2026-03-01, вместе с их билетами и проживаниями."
+    },
+    "d03": {
+      "file": "3_data/d03_delete_subquery.sql",
+      "title": "Удаление отзывов без проживания",
+      "task": "Удалите отзывы пользователей, которые ни разу не жили в отеле, о котором оставили отзыв (используйте DELETE с подзапросом). Заказы учитываются в любом статусе заказа."
+    }
+  },
+  "evolution": {
+    "requirement": "Сервис запускает промокоды. Промокод — это код (уникален), скидка в процентах (целое число от 1 до 50) и срок действия: дата начала valid_from и дата окончания valid_until (тип DATE, valid_from не позже valid_until). valid_until — дата, а не момент времени: промокод действует до конца дня valid_until включительно, то есть заказ, созданный в день valid_until в любое время, ещё в сроке. К заказу можно применить не больше одного промокода (у заказа промокода может и не быть). В alter.sql добавьте промокоды из списка промокодов ниже и примените их к заказам по списку применений ниже (номер заказа → код). Промокод BLACKFRIDAY50 — акция, которая ещё не началась (valid_from позже «сегодня», 2026-11-01), поэтому заказов с ним пока нет: ни одного применения у него быть не должно.",
+    "promo_codes": [
+      {
+        "code": "NEWYEAR10",
+        "discount_percent": 10,
+        "valid_from": "2026-01-01",
+        "valid_until": "2026-01-10"
+      },
+      {
+        "code": "MAYDAY15",
+        "discount_percent": 15,
+        "valid_from": "2026-04-25",
+        "valid_until": "2026-05-02"
+      },
+      {
+        "code": "SUMMER20",
+        "discount_percent": 20,
+        "valid_from": "2026-06-01",
+        "valid_until": "2026-08-31"
+      },
+      {
+        "code": "AUTUMN5",
+        "discount_percent": 5,
+        "valid_from": "2026-10-01",
+        "valid_until": "2026-10-31"
+      },
+      {
+        "code": "BLACKFRIDAY50",
+        "discount_percent": 50,
+        "valid_from": "2026-11-27",
+        "valid_until": "2026-11-30"
+      }
+    ],
+    "order_promos": [
+      {
+        "order_number": "TP-10001",
+        "code": "NEWYEAR10"
+      },
+      {
+        "order_number": "TP-10010",
+        "code": "NEWYEAR10"
+      },
+      {
+        "order_number": "TP-10013",
+        "code": "NEWYEAR10"
+      },
+      {
+        "order_number": "TP-10016",
+        "code": "NEWYEAR10"
+      },
+      {
+        "order_number": "TP-10053",
+        "code": "MAYDAY15"
+      },
+      {
+        "order_number": "TP-10054",
+        "code": "MAYDAY15"
+      },
+      {
+        "order_number": "TP-10057",
+        "code": "MAYDAY15"
+      },
+      {
+        "order_number": "TP-10060",
+        "code": "MAYDAY15"
+      },
+      {
+        "order_number": "TP-10061",
+        "code": "MAYDAY15"
+      },
+      {
+        "order_number": "TP-10097",
+        "code": "SUMMER20"
+      },
+      {
+        "order_number": "TP-10113",
+        "code": "SUMMER20"
+      },
+      {
+        "order_number": "TP-10125",
+        "code": "SUMMER20"
+      },
+      {
+        "order_number": "TP-10159",
+        "code": "AUTUMN5"
+      },
+      {
+        "order_number": "TP-10162",
+        "code": "AUTUMN5"
+      }
+    ]
+  },
+  "blocks": {
+    "er": 25,
+    "ddl": 25,
+    "rules": 15,
+    "dml": 25,
+    "queries": 130,
+    "evolution": 20,
+    "own": 10
+  },
+  "files": [
+    "0_raw/raw.sql",
+    "1_er/er_diagram.puml",
+    "1_er/normalization.md",
+    "2_ddl/ddl.sql",
+    "2_ddl/negative_tests.sql",
+    "3_data/migration.sql",
+    "3_data/d01_update.sql",
+    "3_data/d02_delete_cascade.sql",
+    "3_data/d03_delete_subquery.sql",
+    "3_data/extra.sql",
+    "4_queries/q01_hotel_stays_top.sql",
+    "4_queries/q02_silent_bad_reviews.sql",
+    "4_queries/q03_moscow_october_flights.sql",
+    "4_queries/q04_airline_tickets.sql",
+    "4_queries/q05_popular_directions.sql",
+    "4_queries/q06_passenger_routes.sql",
+    "4_queries/q07_idle_hotels.sql",
+    "4_queries/q08_airline_class_matrix.sql",
+    "4_queries/q09_city_summary.sql",
+    "4_queries/q10_above_flight_avg.sql",
+    "4_queries/q11_flew_vs_stayed.sql",
+    "4_queries/q12_user_feed.sql",
+    "4_queries/q13_first_orders.sql",
+    "4_queries/q14_best_hotel_by_city.sql",
+    "5_evolution/alter.sql",
+    "5_evolution/e01_promo_usage.sql",
+    "5_evolution/e02_expired_promo_orders.sql",
+    "6_own/own01.sql",
+    "6_own/own02.sql"
+  ],
+  "general_rules": [
+    "Позиции заказов (билеты и проживания) учитываются в любом статусе заказа, если в задании явно не сказано иное.",
+    "Значения натуральных ключей (email, номер паспорта, номер рейса, коды IATA, названия) выводите и сравнивайте ровно в том виде, в каком они даны в исходных данных raw; не преобразуйте их при миграции.",
+    "Средние и денежные суммы, полученные делением/умножением на процент, округляйте до 2 знаков (ROUND(…, 2)); сравнения («выше средней», «лучший») выполняйте по неокруглённым значениям.",
+    "Если показатель не определён (нет ни одной строки для усреднения), выводится NULL, а не 0 — кроме колонок, где задание явно разрешает 0."
+  ]
+}

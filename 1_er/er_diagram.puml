@@ -1,0 +1,18 @@
+@startuml
+' Пример синтаксиса PlantUML (две сущности и связь) — замените своей диаграммой:
+'
+' entity "User" as user {
+'   * id : integer <<PK>>
+'   --
+'   * email : varchar(255) <<UK>>
+' }
+'
+' entity "Order" as ord {
+'   * id : integer <<PK>>
+'   --
+'   * user_id : integer <<FK>>
+'   created_at : timestamp
+' }
+'
+' user ||--o{ ord : "делает"
+@enduml

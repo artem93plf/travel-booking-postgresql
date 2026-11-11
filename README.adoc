@@ -1,0 +1,215 @@
+= Проект 1: авиа- и отельные бронирования
+:toc:
+:source-highlighter: highlight.js
+
+Файл собирается из ваших решений: заполняйте файлы в папках `1_er` … `6_own`.
+
+== Общие правила
+
+* Позиции заказов (билеты и проживания) учитываются в любом статусе заказа, если в задании явно не сказано иное.
+* Значения натуральных ключей (email, номер паспорта, номер рейса, коды IATA, названия) выводите и сравнивайте ровно в том виде, в каком они даны в исходных данных raw; не преобразуйте их при миграции.
+* Средние и денежные суммы, полученные делением/умножением на процент, округляйте до 2 знаков (ROUND(…, 2)); сравнения («выше средней», «лучший») выполняйте по неокруглённым значениям.
+* Если показатель не определён (нет ни одной строки для усреднения), выводится NULL, а не 0 — кроме колонок, где задание явно разрешает 0.
+
+== ER-диаграмма и нормализация (25 баллов)
+
+[plantuml, er_diagram, png]
+----
+include::1_er/er_diagram.puml[]
+----
+
+include::1_er/normalization.md[]
+
+== DDL (25 баллов)
+
+=== ddl.sql
+
+[source,sql]
+----
+include::2_ddl/ddl.sql[]
+----
+
+== Правила целостности (15 баллов)
+
+=== negative_tests.sql
+
+[source,sql]
+----
+include::2_ddl/negative_tests.sql[]
+----
+
+== Миграция и DML (25 баллов)
+
+=== migration.sql
+
+[source,sql]
+----
+include::3_data/migration.sql[]
+----
+
+=== d01_update.sql
+
+[source,sql]
+----
+include::3_data/d01_update.sql[]
+----
+
+=== d02_delete_cascade.sql
+
+[source,sql]
+----
+include::3_data/d02_delete_cascade.sql[]
+----
+
+=== d03_delete_subquery.sql
+
+[source,sql]
+----
+include::3_data/d03_delete_subquery.sql[]
+----
+
+=== extra.sql
+
+[source,sql]
+----
+include::3_data/extra.sql[]
+----
+
+== Запросы (130 баллов)
+
+=== q01_hotel_stays_top.sql
+
+[source,sql]
+----
+include::4_queries/q01_hotel_stays_top.sql[]
+----
+
+=== q02_silent_bad_reviews.sql
+
+[source,sql]
+----
+include::4_queries/q02_silent_bad_reviews.sql[]
+----
+
+=== q03_moscow_october_flights.sql
+
+[source,sql]
+----
+include::4_queries/q03_moscow_october_flights.sql[]
+----
+
+=== q04_airline_tickets.sql
+
+[source,sql]
+----
+include::4_queries/q04_airline_tickets.sql[]
+----
+
+=== q05_popular_directions.sql
+
+[source,sql]
+----
+include::4_queries/q05_popular_directions.sql[]
+----
+
+=== q06_passenger_routes.sql
+
+[source,sql]
+----
+include::4_queries/q06_passenger_routes.sql[]
+----
+
+=== q07_idle_hotels.sql
+
+[source,sql]
+----
+include::4_queries/q07_idle_hotels.sql[]
+----
+
+=== q08_airline_class_matrix.sql
+
+[source,sql]
+----
+include::4_queries/q08_airline_class_matrix.sql[]
+----
+
+=== q09_city_summary.sql
+
+[source,sql]
+----
+include::4_queries/q09_city_summary.sql[]
+----
+
+=== q10_above_flight_avg.sql
+
+[source,sql]
+----
+include::4_queries/q10_above_flight_avg.sql[]
+----
+
+=== q11_flew_vs_stayed.sql
+
+[source,sql]
+----
+include::4_queries/q11_flew_vs_stayed.sql[]
+----
+
+=== q12_user_feed.sql
+
+[source,sql]
+----
+include::4_queries/q12_user_feed.sql[]
+----
+
+=== q13_first_orders.sql
+
+[source,sql]
+----
+include::4_queries/q13_first_orders.sql[]
+----
+
+=== q14_best_hotel_by_city.sql
+
+[source,sql]
+----
+include::4_queries/q14_best_hotel_by_city.sql[]
+----
+
+== Эволюция схемы (20 баллов)
+
+=== alter.sql
+
+[source,sql]
+----
+include::5_evolution/alter.sql[]
+----
+
+=== e01_promo_usage.sql
+
+[source,sql]
+----
+include::5_evolution/e01_promo_usage.sql[]
+----
+
+=== e02_expired_promo_orders.sql
+
+[source,sql]
+----
+include::5_evolution/e02_expired_promo_orders.sql[]
+----
+
+== Свои запросы (10 баллов)
+
+=== own01.sql
+
+[source,sql]
+----
+include::6_own/own01.sql[]
+----
+
+=== own02.sql
+
+[source,sql]
+----
+include::6_own/own02.sql[]
+----

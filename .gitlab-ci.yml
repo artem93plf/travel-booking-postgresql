@@ -1,0 +1,59 @@
+# Самопроверка проекта: тот же smoke, что и `docker compose run --rm smoke`.
+# Запускается на каждый push в ветку и на merge request.
+#
+# Схема как в лекционных репозиториях: задача — тонкий docker:cli, рядом dind,
+# внутри dind собирается docker-compose.yml, и проверка идёт ровно той же командой,
+# что и локально. Раннер корпоративный, поэтому образы тянем не с Docker Hub,
+# а через dependency proxy GitLab.
+
+variables:
+  # Зеркало Docker Hub. Одна точка настройки: если у CI_JOB_TOKEN нет доступа
+  # к подгруппе materials, замените на групповой прокси группы курса —
+  #   gitlab.education.tbank.ru:443/t-databases-pg-2026/dependency_proxy/containers
+  GITLAB_DOCKER_PROXY: gitlab.education.tbank.ru:443/t-databases-pg-2026/materials/dependency_proxy/containers
+  # compose в задаче общается с демоном dind по tcp
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+stages:
+  - check
+
+smoke:
+  stage: check
+  image: ${GITLAB_DOCKER_PROXY}/library/docker:27-cli
+  tags:
+    - dind
+  services:
+    - name: ${GITLAB_DOCKER_PROXY}/library/docker:dind
+      alias: docker
+      # Демон dind не знает корпоративный CA, которым подписан gitlab.education.tbank.ru.
+      command: ["--insecure-registry=gitlab.education.tbank.ru:443"]
+  before_script:
+    # dind стартует параллельно с задачей — ждём, пока демон начнёт отвечать.
+    - |
+      for i in $(seq 1 60); do
+        docker info >/dev/null 2>&1 && break
+        echo "Ждём docker daemon ($i/60)..."
+        sleep 2
+      done
+      docker info >/dev/null
+    - echo "$CI_JOB_TOKEN" | docker login gitlab.education.tbank.ru:443 -u gitlab-ci-token --password-stdin
+
+    # docker-compose.yml ждёт эти теги локально у демона:
+    #   db  -> postgres:17
+    #   build smoke (tools/Dockerfile) -> FROM python:3.12-slim
+    # Готовим их заранее из прокси, чтобы compose не полез на Docker Hub.
+    - docker pull -q ${GITLAB_DOCKER_PROXY}/library/postgres:17
+    - docker tag ${GITLAB_DOCKER_PROXY}/library/postgres:17 postgres:17
+    - docker pull -q ${GITLAB_DOCKER_PROXY}/library/python:3.12-slim
+    - docker tag ${GITLAB_DOCKER_PROXY}/library/python:3.12-slim python:3.12-slim
+  script:
+    # Та же команда, что и локально. -T — в CI нет TTY.
+    - docker compose run --rm -T smoke
