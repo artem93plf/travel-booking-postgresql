@@ -131,7 +131,7 @@ entity "Review" as review {
     text : text
     * created_at : timestamp
 }
-' || = ровно один; o{ = от нуля до многих; o| = от нуля до одного.
+' || = ровно один; o{ = от нуля до многих; o| = от нуля до одного
 user ||--o{ order : "оформляет (user_id)"
 order ||--o| payment : "оплачивается (order_id)"
 
