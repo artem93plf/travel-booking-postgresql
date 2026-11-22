@@ -1,18 +1,154 @@
 @startuml
-' Пример синтаксиса PlantUML (две сущности и связь) — замените своей диаграммой:
-'
-' entity "User" as user {
-'   * id : integer <<PK>>
-'   --
-'   * email : varchar(255) <<UK>>
-' }
-'
-' entity "Order" as ord {
-'   * id : integer <<PK>>
-'   --
-'   * user_id : integer <<FK>>
-'   created_at : timestamp
-' }
-'
-' user ||--o{ ord : "делает"
+entity "User" as user {
+    * id : integer <<PK>>
+    --
+    * email : varchar(255) <<UK>>
+    --
+    * full_name : varchar(255)
+    --
+    phone_main : varchar(20)
+    --
+    phone_extra : varchar(20)
+}
+
+entity "Order" as order {
+    * id : integer <<PK>>
+    --
+    * order_number : varchar(20) <<UK>>
+    --
+    * user_id : integer <<FK>>
+    --
+    * created_at : timestamp
+    --
+    * status : varchar(20)
+}
+
+entity "Payment" as payment {
+    * id : integer <<PK>>
+    --
+    * external_payment_id : varchar(50) <<UK>>
+    --
+    * order_id : integer <<FK>> <<UK>>
+    --
+    * method : varchar(20)
+    --
+    * paid_at : timestamp
+    --
+    * amount : decimal(10, 2)
+}
+
+entity "Passenger" as passenger {
+    * id : integer <<PK>>
+    --
+    * passport : varchar(50) <<UK>>
+    * full_name : varchar(255)
+    * birth_date : date
+}
+
+entity "Ticket" as ticket {
+    * id : integer <<PK>>
+    --
+    * order_id : integer <<FK>>
+    * passenger_id : integer <<FK>>
+    * flight_id : integer <<FK>>
+    * ticket_class : varchar(20)
+    * price : decimal(10, 2)
+}
+
+entity "Airline" as airline {
+    * id : integer <<PK>>
+    --
+    * name : varchar(255) <<UK>>
+}
+
+entity "Country" as country {
+    * id : integer <<PK>>
+    --
+    * name : varchar(255) <<UK>>
+}
+
+entity "City" as city {
+    * id : integer <<PK>>
+    --
+    * country_id : integer <<FK>>
+    * name : varchar(255)
+}
+note right of city
+    UK: (country_id, name)
+end note
+
+entity "Airport" as airport {
+    * id : integer <<PK>>
+    --
+    * iata : varchar(3) <<UK>>
+    * name : varchar(255)
+    * city_id : integer <<FK>>
+}
+
+entity "Flight" as flight {
+    * id : integer <<PK>>
+    --
+    * flight_no : varchar(20)
+    * airline_id : integer <<FK>>
+    * from_airport_id : integer <<FK>>
+    * to_airport_id : integer <<FK>>
+    * departure_at : timestamp
+    * arrival_at : timestamp
+    * base_price : decimal(10, 2)
+}
+note right of flight
+    UK: (flight_no, departure_at)
+end note
+
+entity "Hotel" as hotel {
+    * id : integer <<PK>>
+    --
+    * name : varchar(255)
+    * city_id : integer <<FK>>
+    * stars : smallint
+    * price_per_night : decimal(10, 2)
+}
+note right of hotel
+    UK: (city_id, name)
+end note
+
+entity "Stay" as stay {
+    * id : integer <<PK>>
+    --
+    * order_id : integer <<FK>>
+    * hotel_id : integer <<FK>>
+    * check_in : date
+    * check_out : date
+    * guests_count : integer
+}
+
+entity "Review" as review {
+    * id : integer <<PK>>
+    --
+    * user_id : integer <<FK>>
+    * hotel_id : integer <<FK>>
+    * rating : smallint
+    text : text
+    * created_at : timestamp
+}
+' || = ровно один; o{ = от нуля до многих; o| = от нуля до одного.
+user ||--o{ order : "оформляет (user_id)"
+order ||--o| payment : "оплачивается (order_id)"
+
+order ||--o{ ticket : "содержит (order_id)"
+passenger ||--o{ ticket : "летит по билету (passenger_id)"
+flight ||--o{ ticket : "на вылет (flight_id)"
+airline ||--o{ flight : "выполняет (airline_id)"
+
+country ||--o{ city : "включает (country_id)"
+city ||--o{ airport : "местоположение (city_id)"
+airport ||--o{ flight : "отправление (from_airport_id)"
+airport ||--o{ flight : "прибытие (to_airport_id)"
+
+city ||--o{ hotel : "местоположение (city_id)"
+order ||--o{ stay : "содержит (order_id)"
+hotel ||--o{ stay : "бронируется (hotel_id)"
+
+user ||--o{ review : "пишет (user_id)"
+hotel ||--o{ review : "получает (hotel_id)"
 @enduml
