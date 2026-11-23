@@ -75,6 +75,10 @@ WHERE id = (SELECT id FROM review ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
 
+UPDATE ticket
+SET price = 0
+WHERE id = (SELECT id FROM ticket ORDER BY id LIMIT 1);
+
 -- test: R09
 -- Вторая оплата одного и того же заказа
 -- Ожидаемый SQLSTATE: 23505
