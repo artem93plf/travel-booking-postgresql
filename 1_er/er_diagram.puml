@@ -1,5 +1,5 @@
 @startuml
-entity "User" as user {
+entity "users" as user {
     * id : integer <<PK>>
     --
     * email : varchar(255) <<UK>>
@@ -11,7 +11,7 @@ entity "User" as user {
     phone_extra : varchar(20)
 }
 
-entity "Order" as order {
+entity "orders" as order {
     * id : integer <<PK>>
     --
     * order_number : varchar(20) <<UK>>
@@ -23,7 +23,7 @@ entity "Order" as order {
     * status : varchar(20)
 }
 
-entity "Payment" as payment {
+entity "payment" as payment {
     * id : integer <<PK>>
     --
     * external_payment_id : varchar(50) <<UK>>
@@ -37,7 +37,7 @@ entity "Payment" as payment {
     * amount : decimal(10, 2)
 }
 
-entity "Passenger" as passenger {
+entity "passengers" as passenger {
     * id : integer <<PK>>
     --
     * passport : varchar(50) <<UK>>
@@ -45,7 +45,7 @@ entity "Passenger" as passenger {
     * birth_date : date
 }
 
-entity "Ticket" as ticket {
+entity "ticket" as ticket {
     * id : integer <<PK>>
     --
     * order_id : integer <<FK>>
@@ -55,19 +55,19 @@ entity "Ticket" as ticket {
     * price : decimal(10, 2)
 }
 
-entity "Airline" as airline {
+entity "airline" as airline {
     * id : integer <<PK>>
     --
     * name : varchar(255) <<UK>>
 }
 
-entity "Country" as country {
+entity "country" as country {
     * id : integer <<PK>>
     --
     * name : varchar(255) <<UK>>
 }
 
-entity "City" as city {
+entity "city" as city {
     * id : integer <<PK>>
     --
     * country_id : integer <<FK>>
@@ -77,7 +77,7 @@ note right of city
     UK: (country_id, name)
 end note
 
-entity "Airport" as airport {
+entity "airports" as airport {
     * id : integer <<PK>>
     --
     * iata : varchar(3) <<UK>>
@@ -85,7 +85,7 @@ entity "Airport" as airport {
     * city_id : integer <<FK>>
 }
 
-entity "Flight" as flight {
+entity "flights" as flight {
     * id : integer <<PK>>
     --
     * flight_no : varchar(20)
@@ -100,7 +100,7 @@ note right of flight
     UK: (flight_no, departure_at)
 end note
 
-entity "Hotel" as hotel {
+entity "hotel" as hotel {
     * id : integer <<PK>>
     --
     * name : varchar(255)
@@ -112,7 +112,7 @@ note right of hotel
     UK: (city_id, name)
 end note
 
-entity "Stay" as stay {
+entity "stay" as stay {
     * id : integer <<PK>>
     --
     * order_id : integer <<FK>>
@@ -122,7 +122,7 @@ entity "Stay" as stay {
     * guests_count : integer
 }
 
-entity "Review" as review {
+entity "review" as review {
     * id : integer <<PK>>
     --
     * user_id : integer <<FK>>
