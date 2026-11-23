@@ -25,7 +25,7 @@ CREATE TABLE orders (
 CREATE TABLE payment (
     id serial PRIMARY KEY,
     external_payment_id VARCHAR(50) UNIQUE NOT NULL,
-    order_id INT UNIQUE NOT NULL REFERENCES orders(id),
+    order_id INT UNIQUE NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     method VARCHAR(20) NOT NULL,
     paid_at TIMESTAMP NOT NULL,
     amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0)
@@ -38,6 +38,44 @@ CREATE TABLE passengers (
     birth_date DATE NOT NULL
 );
 
+CREATE TABLE country (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE city (
+    id SERIAL PRIMARY KEY,
+    country_id INT NOT NULL REFERENCES country(id),
+    name VARCHAR(255) NOT NULL,
+    UNIQUE (country_id, name)
+);
+
+CREATE TABLE airports (
+    id SERIAL PRIMARY KEY,
+    iata VARCHAR(3) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    city_id INT NOT NULL REFERENCES city(id)
+);
+
+CREATE TABLE airline (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE flights (
+    id SERIAL PRIMARY KEY,
+    flight_no VARCHAR(20) NOT NULL,
+    airline_id INT NOT NULL REFERENCES airline(id),
+    from_airport_id INT NOT NULL REFERENCES airports(id),
+    to_airport_id INT NOT NULL REFERENCES airports(id),
+    departure_at TIMESTAMP NOT NULL,
+    arrival_at TIMESTAMP NOT NULL,
+    CHECK (departure_at < arrival_at),
+    base_price DECIMAL(10, 2) NOT NULL CHECK (base_price > 0),
+    UNIQUE (flight_no, departure_at)
+);
+
+
 CREATE TABLE ticket (
     id SERIAL PRIMARY KEY,
     order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
@@ -47,8 +85,4 @@ CREATE TABLE ticket (
     price DECIMAL(10, 2) NOT NULL CHECK (price > 0)
 );
 
-CREATE TABLE airline (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) UNIQUE NOT NULL
-);
 
