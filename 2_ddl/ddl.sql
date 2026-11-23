@@ -11,7 +11,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     full_name VARCHAR(255) NOT NULL,
     phone_main VARCHAR(20),
-    phone_extra VARCHAR(20) 
+    phone_extra VARCHAR(20)
 );
 
 CREATE TABLE orders (
@@ -25,7 +25,7 @@ CREATE TABLE orders (
 CREATE TABLE payment (
     id serial PRIMARY KEY,
     external_payment_id VARCHAR(50) UNIQUE NOT NULL,
-    order_id INT UNIQUE NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    order_id INT UNIQUE NOT NULL REFERENCES orders(id) ON DELETE CASCADE, -- При удалении заказа связанная оплата удаляется автоматически
     method VARCHAR(20) NOT NULL,
     paid_at TIMESTAMP NOT NULL,
     amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0)
@@ -78,11 +78,40 @@ CREATE TABLE flights (
 
 CREATE TABLE ticket (
     id SERIAL PRIMARY KEY,
+    -- При удалении заказа его билеты удаляются автоматически.
     order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     passenger_id INT NOT NULL REFERENCES passengers(id),
+    -- Удаление вылета с существующими билетами запрещается внешним ключом.
     flight_id INT NOT NULL REFERENCES flights(id),
     ticket_class VARCHAR(20) NOT NULL CHECK (ticket_class IN ('economy', 'business', 'comfort')),
     price DECIMAL(10, 2) NOT NULL CHECK (price > 0)
 );
 
+CREATE TABLE hotel (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city_id INT NOT NULL REFERENCES city(id),
+    UNIQUE (name, city_id),
+    stars SMALLINT NOT NULL CHECK (stars >= 1 AND stars <= 5),
+    price_per_night DECIMAL(10, 2) NOT NULL CHECK (price_per_night > 0)
+);
 
+CREATE TABLE stay (
+    id SERIAL PRIMARY KEY,
+    -- При удалении заказа его проживания удаляются автоматически.
+    order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    hotel_id INT NOT NULL REFERENCES hotel(id),
+    check_in DATE NOT NULL,
+    check_out DATE NOT NULL,
+    CHECK (check_in < check_out),
+    guests_count INT NOT NULL CHECK (guests_count > 0)
+);
+
+CREATE TABLE review (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id),
+    hotel_id INT NOT NULL REFERENCES hotel(id),
+    rating SMALLINT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    text TEXT,
+    created_at TIMESTAMP NOT NULL
+);
