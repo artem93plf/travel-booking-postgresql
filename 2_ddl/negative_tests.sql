@@ -30,10 +30,18 @@ LIMIT 1;
 -- Ожидаемый SQLSTATE: 23503
 -- Ваш SQL код здесь
 
+UPDATE ticket
+SET flight_id = (SELECT MAX(id)+1 FROM flights)
+WHERE id = (SELECT id FROM ticket ORDER BY id LIMIT 1);
+
 -- test: R04
 -- Прилёт не позже вылета
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
+
+UPDATE flights 
+SET arrival_at = departure_at
+WHERE id = (SELECT id FROM flights ORDER BY id LIMIT 1);
 
 -- test: R05
 -- Выезд из отеля не позже заезда
