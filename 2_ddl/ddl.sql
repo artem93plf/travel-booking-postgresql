@@ -30,3 +30,25 @@ CREATE TABLE payment (
     paid_at TIMESTAMP NOT NULL,
     amount DECIMAL(10, 2) NOT NULL CHECK (amount > 0)
 );
+
+CREATE TABLE passengers (
+    id SERIAL PRIMARY KEY,
+    passport VARCHAR(50) UNIQUE NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL
+);
+
+CREATE TABLE ticket (
+    id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    passenger_id INT NOT NULL REFERENCES passengers(id),
+    flight_id INT NOT NULL REFERENCES flights(id),
+    ticket_class VARCHAR(20) NOT NULL CHECK (ticket_class IN ('economy', 'business', 'comfort')),
+    price DECIMAL(10, 2) NOT NULL CHECK (price > 0)
+);
+
+CREATE TABLE airline (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
