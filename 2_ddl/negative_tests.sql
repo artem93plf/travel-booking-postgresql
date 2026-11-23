@@ -97,6 +97,10 @@ LIMIT 1;
 -- Ожидаемый SQLSTATE: 23502
 -- Ваш SQL код здесь
 
+UPDATE orders
+SET user_id = NULL
+WHERE id = (SELECT id FROM orders ORDER BY id LIMIT 1);
+
 -- test: R11
 -- Статус заказа не из списка (created, paid, cancelled)
 -- Ожидаемый SQLSTATE: 23514
