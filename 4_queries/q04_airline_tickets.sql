@@ -11,3 +11,13 @@
 -- Баллы: 10
 --
 -- Ваш SQL код здесь
+
+SELECT
+    a.name AS airline_name,
+    COUNT(t.id) AS tickets_count,
+    ROUND(AVG(t.price), 2) AS avg_ticket_price
+FROM airline AS a
+LEFT JOIN flights AS f ON f.airline_id = a.id
+LEFT JOIN ticket AS t ON t.flight_id = f.id
+GROUP BY a.id, a.name
+ORDER BY airline_name;
