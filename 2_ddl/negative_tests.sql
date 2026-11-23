@@ -19,7 +19,11 @@ LIMIT 1;
 -- Ожидаемый SQLSTATE: 23505
 -- Ваш SQL код здесь
 
-
+INSERT INTO users (email, full_name, phone_main, phone_extra)
+SELECT email, full_name, phone_main, phone_extra
+FROM users
+ORDER BY id
+LIMIT 1;
 
 -- test: R03
 -- Билет на несуществующий рейс
