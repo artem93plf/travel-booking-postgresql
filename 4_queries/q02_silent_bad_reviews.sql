@@ -14,3 +14,16 @@
 -- Баллы: 5
 --
 -- Ваш SQL код здесь
+
+SELECT 
+    u.email AS user_email,
+    h.name AS hotel_name,
+    r.rating AS rating, 
+    r.created_at AS reviewed_at
+FROM review AS r
+JOIN users AS u ON r.user_id = u.id
+JOIN hotel AS h ON r.hotel_id = h.id
+WHERE r.rating <= 2 AND r.text IS NULL AND u.email LIKE '%@tmail.test'
+ORDER BY reviewed_at, user_email;
+
+
