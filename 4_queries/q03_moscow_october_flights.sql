@@ -18,3 +18,18 @@
 -- Баллы: 5
 --
 -- Ваш SQL код здесь
+
+SELECT 
+    f.flight_no,
+    f.departure_at,
+    af.iata AS from_iata,
+    at.iata AS to_iata,
+    f.base_price
+FROM flights AS f 
+JOIN airports AS af ON af.id = f.from_airport_id
+JOIN airports AS at ON at.id = f.to_airport_id
+WHERE af.iata IN ('SVO', 'DME', 'VKO') 
+    AND f.departure_at >= '2026-10-01'
+    AND f.departure_at < '2026-11-01'
+    AND f.base_price BETWEEN 5000 AND 15000
+ORDER BY departure_at, flight_no;
