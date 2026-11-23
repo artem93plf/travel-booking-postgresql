@@ -125,15 +125,23 @@ WHERE id = (
 
 -- test: S1
 -- Сформулируйте своё правило:
--- <текст правила>
--- Ожидаемый SQLSTATE: <код>
+-- число гостей должно быть положительно
+-- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
+
+UPDATE stay
+SET guests_count = 0
+WHERE id = (SELECT id FROM stay ORDER BY id LIMIT 1);
 
 -- test: S2
 -- Сформулируйте своё правило:
--- <текст правила>
--- Ожидаемый SQLSTATE: <код>
+-- цена ночи должна быть положительной
+-- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
+
+UPDATE hotel
+SET price_per_night = -1
+WHERE id = (SELECT id FROM hotel ORDER BY id LIMIT 1);
 
 -- test: S3
 -- Сформулируйте своё правило (S3 — по желанию):
