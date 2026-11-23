@@ -48,6 +48,10 @@ WHERE id = (SELECT id FROM flights ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
 
+UPDATE stay
+SET check_out = check_in 
+WHERE id = (SELECT id FROM stay ORDER BY id LIMIT 1);
+
 -- test: R06
 -- Звёзды отеля вне 1..5
 -- Ожидаемый SQLSTATE: 23514
