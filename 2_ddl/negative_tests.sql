@@ -8,10 +8,18 @@
 -- Ожидаемый SQLSTATE: 23505
 -- Ваш SQL код здесь
 
+INSERT INTO passengers (passport, full_name, birth_date)
+SELECT passport, full_name, birth_date
+FROM passengers
+ORDER BY id
+LIMIT 1;
+
 -- test: R02
 -- Два пользователя с одним email
 -- Ожидаемый SQLSTATE: 23505
 -- Ваш SQL код здесь
+
+
 
 -- test: R03
 -- Билет на несуществующий рейс
