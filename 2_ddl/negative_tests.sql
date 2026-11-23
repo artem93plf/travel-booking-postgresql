@@ -66,6 +66,10 @@ WHERE id = (SELECT id FROM hotel ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
 
+UPDATE review
+SET rating = 6
+WHERE id = (SELECT id FROM review ORDER BY id LIMIT 1);
+
 -- test: R08
 -- Отрицательная или нулевая цена билета
 -- Ожидаемый SQLSTATE: 23514
