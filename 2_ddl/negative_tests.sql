@@ -84,6 +84,7 @@ WHERE id = (SELECT id FROM ticket ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23505
 -- Ваш SQL код здесь
 
+
 -- test: R10
 -- Заказ без пользователя
 -- Ожидаемый SQLSTATE: 23502
@@ -93,6 +94,10 @@ WHERE id = (SELECT id FROM ticket ORDER BY id LIMIT 1);
 -- Статус заказа не из списка (created, paid, cancelled)
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
+
+UPDATE orders 
+SET status = 'abc'
+WHERE id = (SELECT id FROM orders ORDER BY id LIMIT 1);
 
 -- test: R12
 -- Удаление рейса, на который проданы билеты
