@@ -57,6 +57,10 @@ WHERE id = (SELECT id FROM stay ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23514
 -- Ваш SQL код здесь
 
+UPDATE hotel
+SET stars = 6
+WHERE id = (SELECT id FROM hotel ORDER BY id LIMIT 1);
+
 -- test: R07
 -- Оценка отзыва вне 1..5
 -- Ожидаемый SQLSTATE: 23514
