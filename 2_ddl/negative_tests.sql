@@ -84,6 +84,13 @@ WHERE id = (SELECT id FROM ticket ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23505
 -- Ваш SQL код здесь
 
+INSERT INTO payment (
+    external_payment_id, order_id, method, paid_at, amount
+)
+SELECT 'TEST_R09_SECOND_PAYMENT', order_id, method, paid_at, amount
+FROM payment
+ORDER BY id
+LIMIT 1;
 
 -- test: R10
 -- Заказ без пользователя
