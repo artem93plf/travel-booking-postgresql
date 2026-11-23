@@ -115,6 +115,14 @@ WHERE id = (SELECT id FROM orders ORDER BY id LIMIT 1);
 -- Ожидаемый SQLSTATE: 23503
 -- Ваш SQL код здесь
 
+DELETE FROM flights
+WHERE id = (
+    SELECT flight_id
+    FROM ticket
+    ORDER BY id
+    LIMIT 1
+);
+
 -- test: S1
 -- Сформулируйте своё правило:
 -- <текст правила>
