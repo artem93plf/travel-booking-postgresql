@@ -12,3 +12,13 @@
 -- Сортировка: order_number
 --
 -- Ваш SQL код здесь
+
+SELECT 
+    o.order_number,
+    p.code AS promo_code,
+    o.created_at,
+    p.valid_until
+FROM orders AS o
+JOIN promo AS p ON p.id = o.promo_id
+WHERE o.created_at >= p.valid_untill + 1
+ORDER BY order_number;
