@@ -13,3 +13,17 @@
 -- Баллы: 10
 --
 -- Ваш SQL код здесь
+
+SELECT 
+    h.name AS hotel_name,
+    c.name AS city_name
+FROM hotel AS h
+JOIN city AS c ON h.city_id = c.id
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM stay AS s
+    WHERE s.check_in >= '2026-09-01' 
+    AND s.check_in < '2026-10-01'
+    AND h.id = s.hotel_id
+)
+ORDER BY hotel_name;
