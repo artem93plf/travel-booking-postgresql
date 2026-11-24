@@ -36,3 +36,13 @@
 --   TP-10162 -> AUTUMN5
 --
 -- Ваш SQL код здесь
+
+CREATE TABLE promo (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    discount_percent INT NOT NULL,
+    CHECK(discount_percent >= 1 AND discount_percent <= 50),
+    valid_from DATE NOT NULL,
+    valid_until DATE NOT NULL,
+    CHECK (valid_from <= valid_until)
+);
