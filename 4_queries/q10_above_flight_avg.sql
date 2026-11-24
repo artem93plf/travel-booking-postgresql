@@ -12,3 +12,20 @@
 -- Баллы: 10
 --
 -- Ваш SQL код здесь
+
+SELECT
+    f.flight_no,
+    f.departure_at,
+    p.passport AS passenger_passport,
+    t.price AS ticket_price,
+    ROUND(avg_prices.avg_price, 2) AS flight_avg_price
+FROM ticket AS t
+JOIN flights AS f ON f.id = t.flight_id
+JOIN passengers AS p ON p.id = t.passenger_id
+JOIN (
+    SELECT flight_id, AVG(price) AS avg_price
+    FROM ticket
+    GROUP BY flight_id
+) AS avg_prices ON avg_prices.flight_id = t.flight_id
+WHERE t.price > avg_prices.avg_price
+ORDER BY flight_no, departure_at, passenger_passport, ticket_price;
