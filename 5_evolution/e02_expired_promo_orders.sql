@@ -20,5 +20,5 @@ SELECT
     p.valid_until
 FROM orders AS o
 JOIN promo AS p ON p.id = o.promo_id
-WHERE o.created_at >= p.valid_untill + 1
+WHERE o.created_at >= p.valid_until + 1
 ORDER BY order_number;
