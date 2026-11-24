@@ -5,3 +5,12 @@
 -- нельзя.
 --
 -- Ваш SQL код здесь
+
+UPDATE orders AS o
+SET status = 'cancelled'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM payment AS p
+    WHERE p.order_id = o.id)
+AND created_at < '2026-10-01'
+AND o.status = 'created'; 
