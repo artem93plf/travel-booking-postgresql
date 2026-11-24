@@ -14,3 +14,17 @@
 -- допустим).
 --
 -- Ваш SQL код здесь
+
+SELECT
+    p.code AS promo_code,
+    p.discount_percent,
+    COUNT(o.id) AS uses_count,
+    COALESCE(
+        ROUND(SUM(pay.amount * p.discount_percent / 100), 2),
+        0
+    ) AS total_discount
+FROM promo AS p
+LEFT JOIN orders AS o ON o.promo_id = p.id
+LEFT JOIN payment AS pay ON pay.order_id = o.id AND o.status = 'paid'
+GROUP BY p.id
+ORDER BY promo_code;
