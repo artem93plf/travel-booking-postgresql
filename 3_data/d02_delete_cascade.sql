@@ -4,3 +4,7 @@
 -- их билетами и проживаниями.
 --
 -- Ваш SQL код здесь
+
+DELETE FROM orders 
+WHERE created_at < '2026-03-01'
+AND status = 'cancelled';
